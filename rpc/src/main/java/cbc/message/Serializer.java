@@ -24,12 +24,17 @@ public interface Serializer {
 
             public byte[] serialize(Object content) {
                 try {
-                    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                   /* ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
                     ObjectOutputStream objectOut = new ObjectOutputStream(byteOut);
                     objectOut.writeObject(content);
                     //关闭
-                    byteOut.close();
-                    return byteOut.toByteArray();
+                    byteOut.close();*/
+
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(bos);
+                    oos.writeObject(content);
+                    return bos.toByteArray();
+
                 } catch (IOException e) {
                     throw new ServerException("对象序列化成字节失败!");
                 }
@@ -61,6 +66,7 @@ public interface Serializer {
 
 
             public <T> T deSerialize(Class<T> clazz, Object content) {
+
                 return  JSON.parseObject((String) content, clazz);
             }
 

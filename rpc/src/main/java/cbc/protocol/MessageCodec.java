@@ -2,8 +2,9 @@ package cbc.protocol;
 
 import cbc.message.Message;
 import cbc.message.RequestMessage;
+import cbc.message.ResponseMessage;
 import cbc.message.Serializer;
-import cbc.utils.ReadProperties;
+import cbc.utils.SetProperties;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
@@ -24,16 +25,34 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
         if(message.messageType == 0) {
             //完善message的参数
             RequestMessage request = (RequestMessage) message;
-            String type = ReadProperties.readProperties("serializeType");
+            String type = SetProperties.getProperty("serializeType");
             if (type != null && type.equals(Message.SERIALIZE_JAVA)) {
                 request.setSerializeType(Message.SERIALIZE_JAVA);
 
             } else {
                 request.setSerializeType(Message.SERIALIZE_JSON);
             }
+        }else {
+            //完善response
+            //获取序列化方式
+            ResponseMessage response = (ResponseMessage) message;
+            String type = response.getSerializeType();
+            Object result = response.getResult();
+            Object serialize;
+
+            //对内容进行序列化
+            if(type.equals(Message.SERIALIZE_JSON)){
+                serialize = Serializer.Algorithm.json.serialize(result);
+            }else {
+                serialize = Serializer.Algorithm.java.serialize(result);
+            }
+            response.setResult(serialize);
         }
-        Object serialize = Serializer.Algorithm.java.serialize(message);
-        byteBuf.writeBytes((byte[]) serialize);
+
+        //进行LTC编码
+        byte[] serialize = (byte[]) Serializer.Algorithm.java.serialize(message);
+        byteBuf.writeInt(serialize.length);
+        byteBuf.writeBytes(serialize);
 
     }
 
@@ -47,6 +66,19 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
 
         //反序列化
         Message message = Serializer.Algorithm.java.deSerialize(Message.class, bytes);
+        /*//完善message
+        if(message.messageType == 1){
+            ResponseMessage response = (ResponseMessage) message;
+            Object result = response.getResult();
+            Object deSerialize;
+            if(response.getSerializeType().equals(Message.SERIALIZE_JSON)){
+                deSerialize = Serializer.Algorithm.json.deSerialize(response.getResultType(), result);
+            }else {
+                deSerialize = Serializer.Algorithm.java.deSerialize(response.getResultType(), result);
+            }
+            response.setResult(deSerialize);
+        }*/
+
         list.add(message);
     }
 }

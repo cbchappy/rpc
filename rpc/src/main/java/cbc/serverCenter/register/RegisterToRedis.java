@@ -39,7 +39,7 @@ public class RegisterToRedis {
         //开启服务
         startServer = new StartServer(port);
 
-        //TODO 使用netty开启服务端
+        //开启服务端
         Map<String, String> map = new HashMap<>(2);
         map.put(SERVER__REGISTER_PORT, port.toString());
         map.put(SERVER__REGISTER_HOST, host);
