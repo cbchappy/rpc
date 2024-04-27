@@ -26,7 +26,7 @@ public class StartInvoke {
             request.setParameterTypes(m.getParameterTypes());
             request.setMethodName(m.getName());
             request.setInterfaceName(clazz.getSimpleName());
-            request.setResultType(m.getReturnType());
+            request.setClazz(m.getReturnType().getName());
             return client.send(request);
         });
 

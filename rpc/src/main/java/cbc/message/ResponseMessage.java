@@ -22,7 +22,7 @@ public class ResponseMessage extends Message{
     private Exception exception;
 
     //返回结果的类型
-    private Class<?> resultType;
+    private String clazz;
 
     public ResponseMessage() {
         messageType = 1;

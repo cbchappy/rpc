@@ -38,9 +38,9 @@ public class ResponseInboundHandler extends SimpleChannelInboundHandler<Message>
         Object result = msg.getResult();
         Object o;
         if(msg.getSerializeType().equals(Message.SERIALIZE_JSON)){
-           o = Serializer.Algorithm.json.deSerialize(msg.getResultType(), result);
+           o = Serializer.Algorithm.json.deSerialize(Class.forName(msg.getClazz()), result);
         }else {
-            o = Serializer.Algorithm.java.deSerialize(msg.getResultType(), result);
+            o = Serializer.Algorithm.java.deSerialize(Class.forName(msg.getClazz()), result);
         }
         //设置promise为成功
         promise.setSuccess(o);

@@ -66,18 +66,6 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
 
         //反序列化
         Message message = Serializer.Algorithm.java.deSerialize(Message.class, bytes);
-        /*//完善message
-        if(message.messageType == 1){
-            ResponseMessage response = (ResponseMessage) message;
-            Object result = response.getResult();
-            Object deSerialize;
-            if(response.getSerializeType().equals(Message.SERIALIZE_JSON)){
-                deSerialize = Serializer.Algorithm.json.deSerialize(response.getResultType(), result);
-            }else {
-                deSerialize = Serializer.Algorithm.java.deSerialize(response.getResultType(), result);
-            }
-            response.setResult(deSerialize);
-        }*/
 
         list.add(message);
     }

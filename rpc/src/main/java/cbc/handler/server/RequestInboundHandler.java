@@ -34,7 +34,7 @@ public class RequestInboundHandler extends SimpleChannelInboundHandler<Message> 
             response.setSerializeType(msg.getSerializeType());
             response.setResult(res);
             response.setId(msg.getId());
-            response.setResultType(msg.getResultType());
+            response.setClazz(msg.getClazz());
 
 
         } catch (Exception e){

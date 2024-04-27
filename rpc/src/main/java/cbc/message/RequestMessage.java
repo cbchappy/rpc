@@ -24,7 +24,7 @@ public class RequestMessage extends Message{
     private Class[] parameterTypes;
 
     //返回结果的类型
-    private Class<?> resultType;
+    private String clazz;
 
     //请求的方法参数
     private Object[] parameterValues;
