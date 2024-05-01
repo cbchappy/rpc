@@ -18,6 +18,7 @@ import static cbc.constants.RedisConstants.*;
 public class FindServerOnRedis {
 
     public static StartClient findServer(String serverName){
+        String originalName = serverName;
         //检查是否存在服务
         serverName = SERVER_REGISTER_NAME + serverName;
         Jedis jedis = JedisConnectionFactory.getJedis();// client入口 --->server的注册名 要调用的server模块 调用方法
@@ -26,12 +27,14 @@ public class FindServerOnRedis {
             throw new ServerException("服务未找到!");     //server入口
         }                                               //
 
-        //TODO 对服务进行连接  使用netty创建客户端进行连接
+        // 对服务进行连接  使用netty创建客户端进行连接
         Map<String, String> map = jedis.hgetAll(serverName);
         String host = map.get(SERVER__REGISTER_HOST);
         int port = Integer.parseInt(map.get(SERVER__REGISTER_PORT));
-        //创建客户端
-       return new StartClient(host, port);
+
+       //创建客户端
+        return new StartClient(host, port, originalName);
+
     }
 
 
